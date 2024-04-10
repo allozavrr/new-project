@@ -1,44 +1,23 @@
-Hi there!
+# Telegram Bot
 
-This is your instruction:
+Цей бот буде обробляти повідомлення та відповідати на них.
 
-1. **Create a new repository on GitHub:**
-   - Go to GitHub and sign in to your account.
-   - Click on the "+" icon in the top right corner and select "New repository".
-   - Name your repository "new-project".
-   - Choose whether you want the repository to be public or private.
-   - Check the box to initialize the repository with a README.
-   - Click on "Create repository".
+## Встановлення
 
-2. **Clone the repository to your local machine:**
-   - Open your terminal or command prompt.
-   - Navigate to the directory where you want to clone the repository.
-   - Run the command `git clone https://github.com/your-username/new-project.git`.
+1. Встановіть Golang
+2. Запустіть `go get github.com/spf13/cobra` та `go get gopkg.in/telebot.v3`
+3. Зайдіть на Telegram-бота @GithubStars_Bot
+4. Отримайте токен бота та збережіть його у змінну середовища `TELE_TOKEN`
+5. Запустіть бота за допомогою `go run main.go`
 
-3. **Create a new branch called "development":**
-   - Navigate to the cloned repository on your local machine.
-   - Run the command `git checkout -b development`.
+## Команди
 
-4. **Create a README file and add step-by-step instructions:**
-   - Open the repository in your preferred text editor.
-   - Create a new file called "README.md".
-   - Add step-by-step instructions on how to create a new branch, add a README file, commit changes, and merge the development branch into the main branch.
+Бот відповідає на всі повідомлення, які він отримує.
 
-5. **Commit the changes to the "development" branch:**
-   - Run the command `git add README.md` to stage the changes.
-   - Run the command `git commit -m "Added step-by-step instructions to README"` to commit the changes.
+## Функціонал
 
-6. **Push the changes to the "development" branch on GitHub:**
-   - Run the command `git push origin development`.
+- Бот здоровається
+- Запитує ім'я користувача
+- Запитує GitHub користувачське ім'я та відправляє кількість зірочок для всіх репозиторіїв користувача
 
-7. **Merge the "development" branch into the "main" branch:**
-   - Go to the repository on GitHub.
-   - Click on the "Pull requests" tab.
-   - Click on "New pull request".
-   - Select "development" as the base branch and "main" as the compare branch.
-   - Click on "Create pull request".
-   - Add a title and description for the pull request.
-   - Click on "Create pull request" again.
-   - If there are no conflicts, you can merge the pull request.
-
-Congrats! You've done it!
+Тестовий бот - @GithubStars_Bot
