@@ -1,4 +1,4 @@
-FROM golang:1.20 as builder
+FROM golang:1.20-buster as builder
 RUN apt-get update && apt-get install -y make
 
 WORKDIR /app
