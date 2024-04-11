@@ -8,40 +8,40 @@ ARCHITECTURES = linux arm darwin windows
 .PHONY: format get lint test build clean $(ARCHITECTURES) docker-build docker-push
 
 format:
-    gofmt -s -w ./
+	go fmt ./...
 
 get:
-    go get
+	go get ./...
 
 lint:
-    golint
+	golint ./...
 
 test:
-    go test -v
+	go test -v ./...
 
 build:
-    CGD_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o main
+	CGD_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o main ./...
 
 # Збірка для кожної архітектури
 $(ARCHITECTURES):
-    @$(MAKE) TARGETOS=$@ build
+	@$(MAKE) TARGETOS=$@ build
 
 # Очищення
 clean:
-    rm -rf main
+	rm -rf main
 
 # Docker build та push для кожної архітектури
 docker-build:
-    @$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-build-$(arch))
+	@$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-build-$(arch))
 
 docker-push:
-    @$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-push-$(arch))
+	@$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-push-$(arch))
 
 docker-build-%:
-    docker build . --platform $*/amd64 -t ${REGISTRY}/${APP}:${VERSION}-$*
+	docker build . --platform $*/amd64 -t ${REGISTRY}/${APP}:${VERSION}-$*
 
 docker-push-%:
-    docker push ${REGISTRY}/${APP}:${VERSION}-$*
+	docker push ${REGISTRY}/${APP}:${VERSION}-$*
 
 # Збирання, тестування, очищення та Docker build та push для всіх архітектур
 all: build test clean docker-build docker-push
