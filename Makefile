@@ -36,7 +36,7 @@ macOS:
 windows:
 	CGD_ENABLED=0 GOOS=windows GOARCH=${TARGETARCH} ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
 
-image:
+image: build
 	docker build . --platform ${TARGETOS}/${TARGETARCH} -t ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 push:
