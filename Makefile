@@ -5,7 +5,7 @@ REGISTRY=myregistry.com
 # Список підтримуваних архітектур
 ARCHITECTURES = linux arm darwin windows
 
-.PHONY: format get lint test build clean $(ARCHITECTURES) docker-build docker-push
+.PHONY: format get lint test build clean $(ARCHITECTURES) docker-build docker-push image
 
 format:
 	go fmt ./...
@@ -43,5 +43,9 @@ docker-build-%:
 docker-push-%:
 	docker push ${REGISTRY}/${APP}:${VERSION}-$*
 
+# Створення Docker-образу
+image: build
+	docker build . -t ${REGISTRY}/${APP}:${VERSION}
+
 # Збирання, тестування, очищення та Docker build та push для всіх архітектур
-all: build test clean docker-build docker-push
+all: build test clean docker-build docker-push image
