@@ -1,19 +1,13 @@
-# Базовий образ, який містить Go та менеджер пакетів apk
 FROM golang:1.20-buster as builder
 
-# Встановіть make у обрамленні
-RUN apk update && apk add --no-cache build-base
+FROM golang:1.22.1 as builder
 
 WORKDIR /app
 COPY . .
-# Виконайте make без image, оскільки ми вже будемо виконувати цю команду за допомогою Makefile
-RUN make
+RUN make image
 
-# Створіть мінімальний образ Docker
-FROM alpine:latest
-
-WORKDIR /root/
-# Скопіюйте скомпільований бінарний файл з попереднього рівня
+FROM scratch
+WORKDIR /
 COPY --from=builder /app/main .
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["./main"]
