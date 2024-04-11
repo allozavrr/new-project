@@ -1,20 +1,11 @@
-# Dockerfile
+FROM golang:1.22.1 as builder
 
-# Базовий образ
-FROM quay.io/projectquay/golang:1.20
+WORKDIR /home/workdir/
+COPY . .
+RUN make all  
 
-# Контейнеризація коду
-COPY . /app
-
-# Права на виконання для головного файлу
-RUN chmod +x /app/main
-
-# Робоча директорія
-WORKDIR /app
-
-# Збирання коду
-ARG TARGET
-RUN GOOS=$TARGET go build -o app
-
-# Запуск контейнера
-CMD ["./app/main"]
+FROM scratch
+WORKDIR /
+COPY --from=builder /home/workdir/main ./  # Змінено шлях до скомпільованого бінарного файлу
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ENTRYPOINT ["./main"]
