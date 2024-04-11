@@ -1,6 +1,7 @@
 APP=$(shell basename $(shell git remote get-url origin))
 REGISTRY=allozavrr
-VERSION=$(shell git describe --tags --abbrev=0 | tr -cd '[:alnum:]-')
+# Extract the latest tag and sanitize it to be a valid Docker tag
+VERSION=$(shell git describe --tags --abbrev=0 | sed 's/^v//' | tr '/' '-')
 TARGETOS=linux
 TARGETARCH=arm64
 GO_CMD=go
@@ -36,10 +37,10 @@ windows:
 	CGD_ENABLED=0 GOOS=windows GOARCH=${TARGETARCH} ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
 
 image:
-	docker build . --platform ${TARGETOS}/${TARGETARCH} -t ${REGISTRY}/${APP}:$(shell echo ${VERSION} | tr -cd '[:alnum:]')-${TARGETOS}-${TARGETARCH}
+	docker build . --platform ${TARGETOS}/${TARGETARCH} -t ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 push:
-	docker push ${REGISTRY}/${APP}:$(shell echo ${VERSION} | tr -cd '[:alnum:]')-${TARGETOS}-${TARGETARCH}
+	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 clean:
 	rm -rf main
