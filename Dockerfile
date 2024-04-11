@@ -2,7 +2,6 @@ FROM quay.io/projectquay/golang:1.20 as builder
 
 WORKDIR /app
 COPY . .
-RUN make
 
 FROM scratch
 WORKDIR /
