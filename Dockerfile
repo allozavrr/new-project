@@ -2,7 +2,7 @@
 FROM golang:1.20-buster as builder
 
 # Встановіть make у обрамленні
-RUN apk update && apk add --no-cache make
+RUN apk update && apk add --no-cache build-base
 
 WORKDIR /app
 COPY . .
