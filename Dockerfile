@@ -1,21 +1,11 @@
-FROM quay.io/projectquay/golang:1.20 as builder
-# Використовуємо базовий образ Go
-FROM golang:1.20 as builder
+FROM golang:1.22.1 as builder
 
-# Встановлюємо необхідні пакети для створення
-RUN apk add --no-cache bash
-
-WORKDIR /app
+WORKDIR /dir
 COPY . .
+RUN make image
 
-# Будуємо вашу програму
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -v -o main
-
-# Використовуємо базовий образ без файлової системи
 FROM scratch
-
-# Копіюємо скомпільований бінарний файл у пустий образ
-COPY --from=builder /app/main .
-
-# Задаємо точку входу для вашої програми
+WORKDIR /
+COPY --from=builder /dir .
+COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["./main"]
