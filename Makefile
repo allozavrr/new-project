@@ -1,10 +1,10 @@
 APP=${shell basename $(shell git remote get-url origin)}
-REGISTRY=doctortosya
+REGISTRY=allozavrr
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS=linux
 TARGETARCH=arm64
 GO_CMD=go
-LD_FLAGS=-X "https://github.com/tosya1984/mark_docker_files/main.appVersion=${VERSION}"
+LD_FLAGS=-X "https://github.com/allozavrr/new-project/main.appVersion=${VERSION}"
 
 .PHONY: format get lint test build clean Linux arm macOS Windows image push
 
