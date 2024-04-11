@@ -1,11 +1,11 @@
 APP=$(shell basename $(shell git remote get-url origin))
-REGISTRY=arrozav
+REGISTRY=allozavrr
 # Extract the latest tag and sanitize it to be a valid Docker tag
 VERSION=$(shell git describe --tags --abbrev=0 | sed 's/^v//' | tr '/' '-')
 TARGETOS=linux
 TARGETARCH=arm64
 GO_CMD=go
-LD_FLAGS=-X "https://github.com/arrozav/new-project/main.appVersion=${VERSION}"
+LD_FLAGS=-X "https://github.com/allozavrr/new-project/main.appVersion=${VERSION}"
 
 .PHONY: format get lint test build clean linux arm macOS windows image push
 
