@@ -1,11 +1,12 @@
-FROM golang:1.22.1 as builder
+FROM golang:1.20 as builder
+RUN apt-get update && apt-get install -y make
 
-WORKDIR /home/workdir/
+WORKDIR /app
 COPY . .
-RUN make image  
+RUN make
 
-FROM scratch
-WORKDIR /
-COPY --from=builder /home/workdir/main ./  # Змінено шлях до скомпільованого бінарного файлу
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/main .
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["./main"]
