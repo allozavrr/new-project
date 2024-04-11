@@ -1,51 +1,45 @@
 APP=${shell basename $(shell git remote get-url origin)}
+REGISTRY=doctortosya
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-REGISTRY=myregistry.com
+TARGETOS=linux
+TARGETARCH=arm64
+GO_CMD=go
+LD_FLAGS=-X=https://github.com/allozavrr/new-project/main.appVersion=${VERSION}
 
-# Список підтримуваних архітектур
-ARCHITECTURES = linux arm darwin windows
-
-.PHONY: format get lint test build clean $(ARCHITECTURES) docker-build docker-push image
+.PHONY: format get lint test build clean Linux arm macOS Windows image push
 
 format:
-	go fmt ./...
+    ${GO_CMD} fmt -s -w ./
 
 get:
-	go get ./...
+    ${GO_CMD} get
 
 lint:
-	golint ./...
+    ${GO_CMD} lint
 
 test:
-	go test -v ./...
+    ${GO_CMD} test -v
 
 build:
-	CGD_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o main ./...
+    CGD_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} ${GO_CMD} build -v -o main
 
-# Збірка для кожної архітектури
-$(ARCHITECTURES):
-	@$(MAKE) TARGETOS=$@ build
+Linux:
+    CGD_ENABLED=0 GOOS=linux GOARCH=amd64 ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
 
-# Очищення
+arm:
+    CGD_ENABLED=0 GOOS=windows GOARCH=arm ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
+
+macOS:
+    CGD_ENABLED=0 GOOS=darwin GOARCH=amd64 ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
+
+Windows:
+    CGD_ENABLED=0 GOOS=windows GOARCH=${TARGETARCH} ${GO_CMD} build -v -o main -ldflags "${LD_FLAGS}"
+
+image:
+    docker build . --platform ${TARGETOS}/${TARGETARCH} -t ${REGISTRY}/${APP}:${VERSION}
+
+push:
+    docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+
 clean:
-	rm -rf main
-
-# Docker build та push для кожної архітектури
-docker-build:
-	@$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-build-$(arch))
-
-docker-push:
-	@$(MAKE) $(foreach arch,$(ARCHITECTURES),docker-push-$(arch))
-
-docker-build-%:
-	docker build . --platform $*/amd64 -t ${REGISTRY}/${APP}:${VERSION}-$*
-
-docker-push-%:
-	docker push ${REGISTRY}/${APP}:${VERSION}-$*
-
-# Створення Docker-образу
-image: build
-	docker build . -t ${REGISTRY}/${APP}:${VERSION}
-
-# Збирання, тестування, очищення та Docker build та push для всіх архітектур
-all: build test clean docker-build docker-push image
+    rm -rf main
