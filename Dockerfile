@@ -4,7 +4,7 @@ FROM golang:1.22.1 as builder
 
 WORKDIR /app
 COPY . .
-RUN make image
+RUN make 
 
 FROM scratch
 WORKDIR /
