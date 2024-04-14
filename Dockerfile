@@ -1,11 +1,10 @@
-FROM golang:1.22.1 as builder
-
-WORKDIR /dir
+FROM quay.io/projectquay/golang:1.20 as builder
+WORKDIR /go/src/app
 COPY . .
-RUN make image
+RUN make build_linux_amd64
 
 FROM scratch
 WORKDIR /
-COPY --from=builder /dir .
+COPY --from=builder /go/src/app/new-project .
 COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-ENTRYPOINT ["./main"]
+ENTRYPOINT ["./new-project", "start"]
