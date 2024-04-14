@@ -3,6 +3,9 @@ WORKDIR /go/src/app
 COPY . .
 RUN make build_linux_amd64
 
+FROM quay.io/projectquay/golang:1.20
+RUN apt-get update && apt-get install -y golang-go
+
 FROM scratch
 WORKDIR /
 COPY --from=builder /go/src/app/new-project .
