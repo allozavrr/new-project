@@ -1,11 +1,11 @@
 APP=$(shell basename $(shell git remote get-url origin))
 REGISTRY=allozavrr
 # Extract the latest tag and sanitize it to be a valid Docker tag
-VERSION=$(shell git describe --tags --abbrev=0 | sed 's/^v//' | tr '/' '-')
+VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS=linux
 TARGETARCH=arm64
 GO_CMD=go
-LD_FLAGS=-X "https://github.com/allozavrr/new-project/main.appVersion=${VERSION}"
+LD_FLAGS=-X "https://github.com/allozavrr/new-project/tgbot.appVersion=${VERSION}"
 
 .PHONY: format get lint test build clean linux arm macOS windows image push
 
@@ -43,4 +43,4 @@ push:
 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 clean:
-	rm -rf main
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH}
